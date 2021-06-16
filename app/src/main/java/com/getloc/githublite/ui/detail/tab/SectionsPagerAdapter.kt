@@ -3,6 +3,7 @@
 package com.getloc.githublite.ui.detail.tab
 
 import android.content.Context
+import android.os.Bundle
 import androidx.annotation.Nullable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -12,7 +13,9 @@ import com.getloc.githublite.ui.detail.tab.followers.FollowersFragment
 import com.getloc.githublite.ui.detail.tab.following.FollowingFragment
 
 
-class SectionsPagerAdapter(private val context: Context, fragmentManager: FragmentManager): FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+class SectionsPagerAdapter(private val context: Context, fragmentManager: FragmentManager, data : Bundle): FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+
+    private var bundle : Bundle = data
 
     private val tabLayoutTitle = intArrayOf(
         R.string.followers,
@@ -27,6 +30,7 @@ class SectionsPagerAdapter(private val context: Context, fragmentManager: Fragme
             0 -> fragment = FollowersFragment()
             1 -> fragment = FollowingFragment()
         }
+        fragment?.arguments= this.bundle
         return  fragment as Fragment
     }
 

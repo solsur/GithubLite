@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">GithubLite</string>
+    <string name="id_455242">ID : 455242</string>
+    <string name="nama_user">Name User</string>
+    <string name="cari">Search User..</string>
+    <string name="title_activity_detail_activityy">DetailActivityy</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+    <string name="followers">Followers</string>
+    <string name="following">Following</string>
+    <string name="setting_language">Setting Language</string>
+    <string name="favorite">Favorite</string>
+</resources>

@@ -4,7 +4,10 @@ package com.getloc.githublite.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.view.KeyEvent
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -12,11 +15,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.getloc.githublite.R
 import com.getloc.githublite.data.remote.response.User
 import com.getloc.githublite.ui.detail.DetailActivity
+import com.getloc.githublite.ui.favorite.FavoriteActivity
+import com.getloc.githublite.ui.setting.ReminderActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-
-
+    
     private lateinit var viewModel : MainViewModel
     private lateinit var adapter : MainAdapter
 
@@ -73,11 +77,29 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun searchUser(){
-
         val query = et_query.text.toString()
         if (query.isEmpty()) return
         progressbar(true)
         viewModel.setSearchUser(query)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_setting, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.favarite_menu) {
+            val mIntent = Intent(this, FavoriteActivity::class.java)
+            startActivity(mIntent)
+        }
+        if (item.itemId == R.id.settings_reminder) {
+            val mIntent = Intent(this, ReminderActivity::class.java)
+            startActivity(mIntent)
+        }
+        if (item.itemId == R.id.settings_language) {
+            val mIntent = Intent(Settings.ACTION_LOCALE_SETTINGS)
+            startActivity(mIntent)
+        }
+        return super.onOptionsItemSelected(item)
+    }
 }

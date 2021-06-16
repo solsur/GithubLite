@@ -4,32 +4,38 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.getloc.githublite.R
 import com.getloc.githublite.ui.detail.tab.SectionsPagerAdapter
-import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_detail.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class DetailActivity : AppCompatActivity() {
+
+    private lateinit var viewModel: DetailViewModel
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
-        val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager)
-        val viewPager: ViewPager = findViewById(R.id.view_pager)
-        viewPager.adapter = sectionsPagerAdapter
-        val tabs: TabLayout = findViewById(R.id.tabs)
-        tabs.setupWithViewPager(viewPager)
 
-        val extras = intent.extras
-        val username = extras?.getString(EXTRA_USERNAME)
+        val username = intent.getStringExtra(EXTRA_USERNAME)
+        val avatarUrl = intent.getStringExtra(EXTRA_AVATAR_URL)
+        val id = intent.getIntExtra(EXTRA_ID, 0)
+        val bundle = Bundle()
+        bundle.putString(EXTRA_USERNAME, username)
 
-        val viewModel = ViewModelProvider(this).get(DetailViewModel::class.java)
+        val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager, bundle)
+        view_pager.adapter = sectionsPagerAdapter
+        tabs.setupWithViewPager(view_pager)
+
+        viewModel = ViewModelProvider(this).get(DetailViewModel::class.java)
 
         if (username != null) {
             viewModel.setUserDetail(username)
@@ -51,9 +57,39 @@ class DetailActivity : AppCompatActivity() {
                         .into(iv_profile)
             })
         }
+
+        var addFav = false
+        CoroutineScope(Dispatchers.IO).launch{
+            val notUserNull = viewModel.checkUserId(id)
+            withContext(Dispatchers.Main){
+                if(notUserNull != null){
+                    if (notUserNull>0){
+                        toggleFavorite.isChecked = true
+                        addFav = true
+                    } else{
+                        toggleFavorite.isChecked = false
+                        addFav = false
+                    }
+                }
+            }
+        }
+
+        toggleFavorite.setOnClickListener {
+            addFav =!addFav
+            if (addFav){
+                viewModel.addFavorite(id, username.toString(), avatarUrl.toString())
+            } else
+            {
+                viewModel.removeFavorite(id)
+            }
+            toggleFavorite.isChecked = addFav
+        }
+
     }
 
     companion object {
         const val EXTRA_USERNAME = "extra_username"
+        const val EXTRA_ID = "extra_id"
+        const val EXTRA_AVATAR_URL = "extra_avatar_url"
     }
 }

@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.getloc.githublite.R
 import com.getloc.githublite.data.remote.response.User
@@ -47,6 +48,8 @@ class MainAdapter : RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
                     RequestOptions.placeholderOf(R.drawable.ic_loader)
                         .error(R.drawable.ic_error)
                 )
+                .centerCrop()
+                .transition(DrawableTransitionOptions.withCrossFade())
                 .into(imgUser)
             itemView.setOnClickListener {
                 itemClick.onItemClicked(list[adapterPosition])
