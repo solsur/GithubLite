@@ -2,6 +2,7 @@ package com.getloc.githublite.ui.detail
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -10,15 +11,13 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.getloc.githublite.R
 import com.getloc.githublite.ui.detail.tab.SectionsPagerAdapter
+import com.getloc.githublite.ui.favorite.FavoriteViewModel
 import kotlinx.android.synthetic.main.activity_detail.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class DetailActivity : AppCompatActivity() {
 
     private lateinit var viewModel: DetailViewModel
+    private lateinit var favoriteViewModel: FavoriteViewModel
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +35,8 @@ class DetailActivity : AppCompatActivity() {
         tabs.setupWithViewPager(view_pager)
 
         viewModel = ViewModelProvider(this).get(DetailViewModel::class.java)
+        favoriteViewModel = ViewModelProvider(this, ).get(FavoriteViewModel::class.java)
+
 
         if (username != null) {
             viewModel.setUserDetail(username)
@@ -55,35 +56,71 @@ class DetailActivity : AppCompatActivity() {
                         )
                         .centerCrop()
                         .into(iv_profile)
+
+
+                favoriteViewModel.checkById(username)
+                favoriteViewModel.favoriteUser.observe(this, { dataFav ->
+                        if (dataFav == null) {
+                            toggleFavorite.isChecked = false
+                            favoriteViewModel.checkById(username)
+                            favoriteViewModel.favoriteUser.observe(this@DetailActivity, {
+                                toggleFavorite.setOnClickListener { view ->
+                                    toggleFavorite.isChecked = false
+                                    favoriteViewModel.addFavorite(it)
+                                    Toast.makeText(
+                                            this@DetailActivity,
+                                            "User telah ditambahkan ke FAVORITE",
+                                            Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            })
+                        } else {
+                            toggleFavorite.isChecked = true
+                            favoriteViewModel.checkById(username)
+                            favoriteViewModel.favoriteUser.observe(this@DetailActivity, {
+                                toggleFavorite.setOnClickListener {
+                                    toggleFavorite.isChecked = false
+                                    favoriteViewModel.deleteFavorite(dataFav)
+                                    Toast.makeText(
+                                            this@DetailActivity,
+                                            "User telah dihapus dari FAVORITE",
+                                            Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            })
+                        }
+                })
             })
         }
 
-        var addFav = false
-        CoroutineScope(Dispatchers.IO).launch{
-            val notUserNull = viewModel.checkUserId(id)
-            withContext(Dispatchers.Main){
-                if(notUserNull != null){
-                    if (notUserNull>0){
-                        toggleFavorite.isChecked = true
-                        addFav = true
-                    } else{
-                        toggleFavorite.isChecked = false
-                        addFav = false
-                    }
-                }
-            }
-        }
 
-        toggleFavorite.setOnClickListener {
-            addFav =!addFav
-            if (addFav){
-                viewModel.addFavorite(id, username.toString(), avatarUrl.toString())
-            } else
-            {
-                viewModel.removeFavorite(id)
-            }
-            toggleFavorite.isChecked = addFav
-        }
+
+//        var addFav = false
+//        CoroutineScope(Dispatchers.IO).launch{
+//            val notUserNull = viewModel.checkUserId(id)
+//            withContext(Dispatchers.Main){
+//                if(notUserNull != null){
+//                    if (notUserNull>0){
+//                        toggleFavorite.isChecked = true
+//                        addFav = true
+//                    } else{
+//                        toggleFavorite.isChecked = false
+//                        addFav = false
+//                    }
+//                }
+//            }
+//        }
+//
+//        toggleFavorite.setOnClickListener {
+//            addFav =!addFav
+//            if (addFav){
+//                viewModel.addFavorite(id, username.toString(), avatarUrl.toString())
+//            } else
+//            {
+//                viewModel.removeFavorite(id)
+//            }
+//            toggleFavorite.isChecked = addFav
+//        }
 
     }
 

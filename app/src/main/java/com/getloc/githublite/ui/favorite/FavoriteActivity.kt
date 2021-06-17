@@ -40,7 +40,7 @@ class FavoriteActivity : AppCompatActivity() {
         rv_favorite.setHasFixedSize(true)
         rv_favorite.layoutManager = LinearLayoutManager(this@FavoriteActivity)
         rv_favorite.adapter = adapter
-        viewModel.getFavoriteUser()?.observe(this, {
+        viewModel.readAllData.observe(this, {
             if (it!=null){
                 val list = favoriteList(it)
                 adapter.setList(list)
@@ -53,9 +53,9 @@ class FavoriteActivity : AppCompatActivity() {
         val listFavoriteUser= ArrayList<User>()
         for (user in users){
             val userList = User(
-                user.login,
+                user.username,
                 user.id,
-                user.avatar_url
+                user.avatar
             )
             listFavoriteUser.add(userList)
         }

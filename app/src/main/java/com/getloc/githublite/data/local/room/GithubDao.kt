@@ -1,33 +1,33 @@
 package com.getloc.githublite.data.local.room
 
+import android.database.Cursor
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Transaction
+import androidx.room.*
 import com.getloc.githublite.data.local.entity.UserEntity
 
 @Dao
 interface GithubDao {
 
-    @Query("SELECT * FROM user_entities")
-    fun getAllUser(): LiveData<List<UserEntity>>
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun addFav(userEntity: UserEntity)
 
-    @Insert
-    suspend fun addtoFavorite(userEntity: UserEntity)
+    @Query("SELECT * FROM user_entities ORDER BY id ASC")
+    fun getFav(): LiveData<List<UserEntity>>
 
-    @Query("SELECT * FROM user_entities where favorite = 1")
-    fun getFavoriteUser(): LiveData<List<UserEntity>>
+    @Query("SELECT * FROM user_entities ORDER BY id ASC")
+    fun getAllFav(): Cursor
 
-    @Query("SELECT count(*) FROM  user_entities WHERE user_entities.id = :id")
-    fun getCheckUserId(id: Int): Int
+    @Update
+    suspend fun updateFav(userEntity: UserEntity)
 
+    @Delete
+    suspend fun deleteFav(userEntity: UserEntity)
 
-    @Query("DELETE FROM user_entities WHERE user_entities.id = :id")
-    suspend fun removeFavorite(id: Int): Int
+    @Query("DELETE FROM user_entities")
+    suspend fun deleteAll()
 
-    @Transaction
-    @Query("SELECT * FROM user_entities WHERE id = :id")
-    fun getDetailUserById(id: String): LiveData<UserEntity>
+    @Query("SELECT * FROM user_entities WHERE user_entities.username = :username")
+    suspend fun checkById(username: String): UserEntity
+
 
 }

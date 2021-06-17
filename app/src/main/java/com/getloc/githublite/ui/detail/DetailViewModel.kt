@@ -47,25 +47,6 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         return user
     }
 
-    fun addFavorite(id: Int,login: String, avatarUrl: String){
-        CoroutineScope(Dispatchers.IO).launch {
-            val user = UserEntity(
-                id,
-                login,
-                avatarUrl
-            )
-            githubDao?.addtoFavorite(user)
-        }
-    }
-
-    suspend fun checkUserId(id: Int) = githubDao?.getCheckUserId(id)
-
-    fun removeFavorite(id: Int){
-        CoroutineScope(Dispatchers.IO).launch {
-            githubDao?.removeFavorite(id)
-        }
-    }
-
 
 
 }

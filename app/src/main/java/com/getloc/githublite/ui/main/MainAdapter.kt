@@ -24,9 +24,9 @@ class MainAdapter : RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
         this.itemClick = onItemClick
     }
 
-    fun setList(dataTravel: ArrayList<User>){
+    fun setList(user: ArrayList<User>){
         list.clear()
-        list.addAll(dataTravel)
+        list.addAll(user)
         notifyDataSetChanged()
     }
 
