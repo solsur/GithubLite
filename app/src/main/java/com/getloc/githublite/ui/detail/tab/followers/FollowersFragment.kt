@@ -15,7 +15,9 @@ import com.getloc.githublite.data.remote.response.User
 import com.getloc.githublite.ui.detail.DetailActivity
 import com.getloc.githublite.ui.main.MainAdapter
 import kotlinx.android.synthetic.main.fragment_followers.*
+import kotlinx.coroutines.InternalCoroutinesApi
 
+@InternalCoroutinesApi
 class FollowersFragment : Fragment() {
 
 
@@ -37,15 +39,6 @@ class FollowersFragment : Fragment() {
         adapter = MainAdapter()
         adapter.notifyDataSetChanged()
 
-        adapter.setSelectedUser(object : MainAdapter.OnItemClick{
-            override fun onItemClicked(data: User) {
-                Intent(requireActivity(), DetailActivity::class.java).also {
-                    it.putExtra(DetailActivity.EXTRA_USERNAME, data.login)
-                    startActivity(it)
-                }
-            }
-        })
-
         val args = arguments
         username = args?.getString(DetailActivity.EXTRA_USERNAME).toString()
         rv_follow.setHasFixedSize(true)
@@ -57,6 +50,17 @@ class FollowersFragment : Fragment() {
             if (it!=null){
                 adapter.setList(it)
                 progressbar(false)
+            }
+        })
+
+        adapter.setSelectedUser(object : MainAdapter.OnItemClick{
+            override fun onItemClicked(data: User) {
+                Intent(requireContext(), DetailActivity::class.java).also {
+                    it.putExtra(DetailActivity.EXTRA_ID, data.id)
+                    it.putExtra(DetailActivity.EXTRA_USERNAME, data.login)
+                    it.putExtra(DetailActivity.EXTRA_AVATAR_URL, data.avatar_url)
+                    startActivity(it)
+                }
             }
         })
 

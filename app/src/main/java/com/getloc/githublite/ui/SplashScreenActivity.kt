@@ -8,7 +8,9 @@ import android.os.Bundle
 import android.os.Handler
 import com.getloc.githublite.R
 import com.getloc.githublite.ui.main.MainActivity
+import kotlinx.coroutines.InternalCoroutinesApi
 
+@InternalCoroutinesApi
 class SplashScreenActivity : AppCompatActivity() {
     private lateinit var  handler: Handler
     private val time = 3000L

@@ -18,7 +18,7 @@ class MainAdapter : RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
 
     private val list = ArrayList<User>()
 
-    private lateinit var itemClick: OnItemClick
+    private var itemClick: OnItemClick? = null
 
     fun setSelectedUser (onItemClick: OnItemClick){
         this.itemClick = onItemClick
@@ -30,7 +30,7 @@ class MainAdapter : RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
         notifyDataSetChanged()
     }
 
-    inner class MainViewHolder(val view: View): RecyclerView.ViewHolder(view) {
+    inner class MainViewHolder(private val view : View): RecyclerView.ViewHolder(view) {
 
         @SuppressLint("SetTextI18n")
         fun bind(user: User) {
@@ -51,8 +51,9 @@ class MainAdapter : RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
                 .centerCrop()
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(imgUser)
+
             itemView.setOnClickListener {
-                itemClick.onItemClicked(list[adapterPosition])
+                itemClick?.onItemClicked(list[adapterPosition])
             }
         }
 

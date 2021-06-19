@@ -11,8 +11,10 @@ import androidx.fragment.app.FragmentPagerAdapter
 import com.getloc.githublite.R
 import com.getloc.githublite.ui.detail.tab.followers.FollowersFragment
 import com.getloc.githublite.ui.detail.tab.following.FollowingFragment
+import kotlinx.coroutines.InternalCoroutinesApi
 
 
+@InternalCoroutinesApi
 class SectionsPagerAdapter(private val context: Context, fragmentManager: FragmentManager, data : Bundle): FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     private var bundle : Bundle = data

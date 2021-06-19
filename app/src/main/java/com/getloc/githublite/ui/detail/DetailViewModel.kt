@@ -12,20 +12,27 @@ import com.getloc.githublite.data.remote.api.RetrofitClient
 import com.getloc.githublite.data.remote.response.Detail
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+@InternalCoroutinesApi
 class DetailViewModel(application: Application) : AndroidViewModel(application) {
 
     val user = MutableLiveData<Detail>()
-    private var githubDao : GithubDao? = null
-    private var userDB : GithubDatabase? = GithubDatabase.getInstance(application)
+    private var githubDao : GithubDao?
+    private var githubDatabase : GithubDatabase?
 
     init {
-        githubDao = userDB?.githubDao()
+        githubDatabase = GithubDatabase.getInstance(application)
+        githubDao = githubDatabase?.githubDao()
     }
+
+    suspend fun getCheckUserById(id: Int) = githubDao?.getCheckUserId(id)
+
+    fun getUserDetail() : LiveData<Detail> = user
 
     fun setUserDetail(username: String){
         RetrofitClient.instanceAPI
@@ -43,8 +50,22 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 })
     }
 
-    fun getUserDetail() : LiveData<Detail> {
-        return user
+
+    fun addFavorite(id: Int, login: String, avatarUrl: String){
+        CoroutineScope(Dispatchers.IO).launch {
+            val user = UserEntity(
+                id,
+                login,
+                avatarUrl
+            )
+            githubDao?.addFavorite(user)
+        }
+    }
+
+    fun removeFavorite(id: Int){
+        CoroutineScope(Dispatchers.IO).launch {
+            githubDao?.removeFavorite(id)
+        }
     }
 
 

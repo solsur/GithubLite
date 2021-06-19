@@ -13,7 +13,9 @@ import com.getloc.githublite.ui.detail.DetailActivity
 import com.getloc.githublite.ui.main.MainAdapter
 import kotlinx.android.synthetic.main.activity_favorite.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.InternalCoroutinesApi
 
+@InternalCoroutinesApi
 class FavoriteActivity : AppCompatActivity() {
 
     private lateinit var viewModel: FavoriteViewModel
@@ -22,7 +24,7 @@ class FavoriteActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_favorite)
-        supportActionBar?.title = getString(R.string.fav)
+        supportActionBar?.title = getString(R.string.favorite)
 
         adapter = MainAdapter()
         adapter.notifyDataSetChanged()
@@ -31,7 +33,9 @@ class FavoriteActivity : AppCompatActivity() {
         adapter.setSelectedUser(object : MainAdapter.OnItemClick{
             override fun onItemClicked(data: User) {
                 Intent(this@FavoriteActivity, DetailActivity::class.java).also {
+                    it.putExtra(DetailActivity.EXTRA_ID, data.id)
                     it.putExtra(DetailActivity.EXTRA_USERNAME, data.login)
+                    it.putExtra(DetailActivity.EXTRA_AVATAR_URL, data.avatar_url)
                     startActivity(it)
                 }
             }
@@ -40,7 +44,7 @@ class FavoriteActivity : AppCompatActivity() {
         rv_favorite.setHasFixedSize(true)
         rv_favorite.layoutManager = LinearLayoutManager(this@FavoriteActivity)
         rv_favorite.adapter = adapter
-        viewModel.readAllData.observe(this, {
+        viewModel.getFavoriteUser()?.observe(this, {
             if (it!=null){
                 val list = favoriteList(it)
                 adapter.setList(list)
@@ -53,9 +57,9 @@ class FavoriteActivity : AppCompatActivity() {
         val listFavoriteUser= ArrayList<User>()
         for (user in users){
             val userList = User(
-                user.username,
                 user.id,
-                user.avatar
+                user.login,
+                user.avatar_url
             )
             listFavoriteUser.add(userList)
         }

@@ -5,24 +5,28 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.getloc.githublite.data.local.entity.UserEntity
+import kotlinx.coroutines.InternalCoroutinesApi
 
-@Database(entities = [UserEntity::class], version = 1, exportSchema = false)
+@Database(entities = [UserEntity::class], version = 1)
 abstract class GithubDatabase : RoomDatabase() {
 
     abstract fun githubDao(): GithubDao
 
     companion object {
-        @Volatile
         private var INSTANCE: GithubDatabase? = null
 
-        @JvmStatic
-        fun getInstance(context: Context): GithubDatabase =
-                INSTANCE ?: synchronized(this) {
-                    Room.databaseBuilder(
-                            context.applicationContext,
-                            GithubDatabase::class.java,
-                            "catalogue_database.db"
-                    ).allowMainThreadQueries().build().apply { INSTANCE = this }
+        @InternalCoroutinesApi
+        fun getInstance(context: Context): GithubDatabase?{
+            if (INSTANCE==null){
+                synchronized(GithubDatabase::class) {
+                    INSTANCE = Room.databaseBuilder(
+                        context.applicationContext,
+                        GithubDatabase::class.java,
+                        "database_user"
+                    ).build()
                 }
+            }
+            return INSTANCE
+        }
     }
 }

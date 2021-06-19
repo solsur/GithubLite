@@ -18,7 +18,9 @@ import com.getloc.githublite.ui.detail.DetailActivity
 import com.getloc.githublite.ui.favorite.FavoriteActivity
 import com.getloc.githublite.ui.setting.ReminderActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.InternalCoroutinesApi
 
+@InternalCoroutinesApi
 class MainActivity : AppCompatActivity() {
     
     private lateinit var viewModel : MainViewModel
@@ -46,15 +48,6 @@ class MainActivity : AppCompatActivity() {
         adapter = MainAdapter()
         adapter.notifyDataSetChanged()
 
-        adapter.setSelectedUser(object : MainAdapter.OnItemClick{
-            override fun onItemClicked(data: User) {
-                Intent(this@MainActivity, DetailActivity::class.java).also {
-                    it.putExtra(DetailActivity.EXTRA_USERNAME, data.login)
-                    startActivity(it)
-                }
-            }
-        })
-
         rv_search.setHasFixedSize(true)
         rv_search.layoutManager = LinearLayoutManager(this@MainActivity)
         rv_search.adapter = adapter
@@ -62,6 +55,17 @@ class MainActivity : AppCompatActivity() {
             if (it!=null){
                 adapter.setList(it)
                 progressbar(false)
+            }
+        })
+
+        adapter.setSelectedUser(object : MainAdapter.OnItemClick{
+            override fun onItemClicked(data: User) {
+                Intent(this@MainActivity, DetailActivity::class.java).also {
+                    it.putExtra(DetailActivity.EXTRA_ID, data.id)
+                    it.putExtra(DetailActivity.EXTRA_USERNAME, data.login)
+                    it.putExtra(DetailActivity.EXTRA_AVATAR_URL, data.avatar_url)
+                    startActivity(it)
+                }
             }
         })
 

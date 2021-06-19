@@ -4,6 +4,9 @@
     package="com.getloc.githublite">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <permission
+        android:name="com.getloc.githublite.READ_DATABASE"
+        android:protectionLevel="normal" />
 
     <application
         android:allowBackup="true"
