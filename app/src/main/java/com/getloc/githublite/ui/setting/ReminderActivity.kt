@@ -24,7 +24,7 @@ class ReminderActivity : AppCompatActivity() {
         switch_one.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 saveReminder(true)
-                alarmReceiver.setRepeatingAlarm(this, "RepeatingAlarm", "11:14", "GithubLite Reminder")
+                alarmReceiver.setRepeatingAlarm(this, "RepeatingAlarm", "09:00", "GithubLite Reminder")
 
             } else{
                 saveReminder(false)

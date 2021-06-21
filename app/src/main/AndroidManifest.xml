@@ -16,6 +16,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GithubLite"
         tools:ignore="AllowBackup">
+
+        <receiver
+            android:name=".alarm.AlarmReceiver"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedReceiver" />
+
+        <provider
+            android:name=".provider.UserContentProvider"
+            android:authorities="com.getloc.githublite"
+            android:enabled="true"
+            android:exported="true"
+            android:readPermission="com.getloc.githublite.READ_DATABASE" />
+
         <activity android:name=".ui.setting.ReminderActivity" />
         <activity android:name=".ui.favorite.FavoriteActivity" />
         <activity

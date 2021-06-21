@@ -10,21 +10,9 @@ import com.getloc.githublite.data.local.room.GithubDatabase
 import kotlinx.coroutines.InternalCoroutinesApi
 
 @InternalCoroutinesApi
-class ContentProvider : ContentProvider() {
-
-    companion object{
-        private const val AUTHORITY = "com.getloc.githublite"
-        private const val TABLE_NAME = "database_user"
-        const val ID_FAVORITE_USER_DATA = 1
-        val uriMatcher = UriMatcher(UriMatcher.NO_MATCH)
-
-        init {
-            uriMatcher.addURI(AUTHORITY, TABLE_NAME, ID_FAVORITE_USER_DATA)
-        }
-    }
+class UserContentProvider : ContentProvider() {
 
     private lateinit var githubDao: GithubDao
-
 
     override fun onCreate(): Boolean {
         githubDao = context?.let { ctx->
@@ -39,7 +27,7 @@ class ContentProvider : ContentProvider() {
     ): Cursor? {
         val cursor: Cursor?
         when(uriMatcher.match(uri)){
-            ID_FAVORITE_USER_DATA ->{
+            ID_DATABASE_USER_DATA ->{
                 cursor= githubDao.getAllUser()
                 if (context!=null){
                     cursor.setNotificationUri(context?.contentResolver, uri)
@@ -69,4 +57,16 @@ class ContentProvider : ContentProvider() {
     ): Int {
         return 0
     }
+
+    companion object{
+        private const val AUTHORITY = "com.getloc.githublite"
+        private const val TABLE_NAME = "database_user"
+        const val ID_DATABASE_USER_DATA = 1
+        val uriMatcher = UriMatcher(UriMatcher.NO_MATCH)
+
+        init {
+            uriMatcher.addURI(AUTHORITY, TABLE_NAME, ID_DATABASE_USER_DATA)
+        }
+    }
+
 }

@@ -17,31 +17,21 @@ import java.util.*
 
 class AlarmReceiver : BroadcastReceiver() {
 
-    companion object {
-        private const val NOTIFICATION_ID = 1
-        private const val CHANNEL_ID = "channel_01"
-        private const val CHANNEL_NAME = "GithubLite Reminder"
-        private const val TIME_FORMAT = "HH:mm"
-        const val EXTRA_MESSAGE = "extra_message"
-        const val EXTRA_TYPE = "extra_type"
-        private const val ID_REPEATING = 101
-    }
-
     override fun onReceive(context: Context, intent: Intent) {
         showAlarmNotification(context)
     }
 
     private fun showAlarmNotification(context: Context){
-        val intent = context.packageManager.getLaunchIntentForPackage("com.cals.githubyoi")
+        val intent = context?.packageManager.getLaunchIntentForPackage("com.getloc.githublite")
         val pendingIntent = PendingIntent.getActivity(context, 0 , intent, 0)
 
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager = context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentIntent(pendingIntent)
                 .setSmallIcon(R.drawable.ic_notifications)
                 .setContentTitle(context.resources.getString((R.string.app_name)))
-                .setContentText("Cari user favorite kamu sekarang!")
+                .setContentText("Cari teman kamu digithub!")
                 .setAutoCancel(true)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
@@ -95,5 +85,15 @@ class AlarmReceiver : BroadcastReceiver() {
         } catch (e: ParseException){
             true
         }
+    }
+
+    companion object {
+        private const val NOTIFICATION_ID = 1
+        private const val CHANNEL_ID = "channel_01"
+        private const val CHANNEL_NAME = "GithubLite Reminder"
+        private const val TIME_FORMAT = "HH:mm"
+        const val EXTRA_MESSAGE = "extra_message"
+        const val EXTRA_TYPE = "extra_type"
+        private const val ID_REPEATING = 101
     }
 }
