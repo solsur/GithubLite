@@ -41,6 +41,10 @@ class FavoriteActivity : AppCompatActivity() {
             }
         })
 
+        showRecyclerList()
+    }
+
+    private fun showRecyclerList() {
         rv_favorite.setHasFixedSize(true)
         rv_favorite.layoutManager = LinearLayoutManager(this@FavoriteActivity)
         rv_favorite.adapter = adapter

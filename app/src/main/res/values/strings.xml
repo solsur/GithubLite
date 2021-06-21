@@ -11,4 +11,5 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="setting_language">Pengaturan Bahasa</string>
     <string name="favorite">Favorit</string>
+    <string name="set_reminder">Set Reminder</string>
 </resources>

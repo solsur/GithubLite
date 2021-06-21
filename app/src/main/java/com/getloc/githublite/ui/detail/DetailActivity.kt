@@ -27,13 +27,6 @@ class DetailActivity : AppCompatActivity() {
         val username = intent.getStringExtra(EXTRA_USERNAME)
         val avatarUrl = intent.getStringExtra(EXTRA_AVATAR_URL)
 
-        val bundle = Bundle()
-        bundle.putString(EXTRA_USERNAME, username)
-
-        val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager, bundle)
-        view_pager.adapter = sectionsPagerAdapter
-        tabs.setupWithViewPager(view_pager)
-
         viewModel = ViewModelProvider(this).get(DetailViewModel::class.java)
         viewModel.setUserDetail(username.toString())
         viewModel.getUserDetail().observe(this, {
@@ -54,6 +47,12 @@ class DetailActivity : AppCompatActivity() {
             tv_following.text  = it.following.toString()+" Following"
             tv_location.text = it.location
         })
+
+        val bundle = Bundle()
+        bundle.putString(EXTRA_USERNAME, username)
+        val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager, bundle)
+        view_pager.adapter = sectionsPagerAdapter
+        tabs.setupWithViewPager(view_pager)
 
         var addFav = false
         CoroutineScope(Dispatchers.IO).launch{

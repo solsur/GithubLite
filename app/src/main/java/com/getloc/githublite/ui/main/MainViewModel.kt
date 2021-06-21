@@ -13,7 +13,9 @@ import retrofit2.Response
 
 class MainViewModel  : ViewModel() {
 
-    val listUser = MutableLiveData<ArrayList<User>>()
+    val listSearchUser = MutableLiveData<ArrayList<User>>()
+
+    fun getSearchUser(): LiveData<ArrayList<User>> = listSearchUser
 
     fun setSearchUser(query: String){
         RetrofitClient.instanceAPI
@@ -21,21 +23,12 @@ class MainViewModel  : ViewModel() {
             .enqueue(object : Callback<UserResponse> {
                 override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
                     if (response.isSuccessful) {
-                        listUser.postValue(response.body()?.items)
+                        listSearchUser.postValue(response.body()?.items)
                     }
                 }
-
                 override fun onFailure(call: Call<UserResponse>, t: Throwable) {
-                    Log.d("onFailure: ", t.message.toString())
+                    Log.d("Gagal : ", t.message.toString())
                 }
-
             })
-
     }
-
-
-    fun getSearchUser(): LiveData<ArrayList<User>> {
-        return  listUser
-    }
-
 }

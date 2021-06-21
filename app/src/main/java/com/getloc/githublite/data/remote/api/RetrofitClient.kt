@@ -3,7 +3,7 @@ package com.getloc.githublite.data.remote.api
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object RetrofitClient{
+object  RetrofitClient{
 
     private const val BASE_URL = "https://api.github.com/"
 

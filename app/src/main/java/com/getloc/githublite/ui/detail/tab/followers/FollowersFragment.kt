@@ -41,17 +41,6 @@ class FollowersFragment : Fragment() {
 
         val args = arguments
         username = args?.getString(DetailActivity.EXTRA_USERNAME).toString()
-        rv_follow.setHasFixedSize(true)
-        rv_follow.layoutManager = LinearLayoutManager(activity)
-        rv_follow.adapter = adapter
-        viewModel = ViewModelProvider(this).get(FollowersViewModel::class.java)
-        viewModel.setFollowers(username)
-        viewModel.getFollowers().observe(viewLifecycleOwner, {
-            if (it!=null){
-                adapter.setList(it)
-                progressbar(false)
-            }
-        })
 
         adapter.setSelectedUser(object : MainAdapter.OnItemClick{
             override fun onItemClicked(data: User) {
@@ -63,7 +52,21 @@ class FollowersFragment : Fragment() {
                 }
             }
         })
+        showRecyclerList()
+    }
 
+    private fun showRecyclerList() {
+        rv_follow.setHasFixedSize(true)
+        rv_follow.layoutManager = LinearLayoutManager(activity)
+        rv_follow.adapter = adapter
+        viewModel = ViewModelProvider(this).get(FollowersViewModel::class.java)
+        viewModel.setFollowers(username)
+        viewModel.getFollowers().observe(viewLifecycleOwner, {
+            if (it!=null){
+                adapter.setList(it)
+                progressbar(false)
+            }
+        })
     }
 
     private fun progressbar(state: Boolean){

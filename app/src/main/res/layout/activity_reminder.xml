@@ -6,4 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".ui.setting.ReminderActivity">
 
+    <Switch
+        android:id="@+id/switch_one"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:text="@string/set_reminder"
+        android:textOff="ON"
+        android:textOn="OFF"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="HardcodedText,UseSwitchCompatOrMaterialXml" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,6 +17,7 @@ import com.getloc.githublite.data.remote.response.User
 import com.getloc.githublite.ui.detail.DetailActivity
 import com.getloc.githublite.ui.favorite.FavoriteActivity
 import com.getloc.githublite.ui.setting.ReminderActivity
+import kotlinx.android.synthetic.main.activity_favorite.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.InternalCoroutinesApi
 
@@ -44,20 +45,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         viewModel =  ViewModelProvider(this).get(MainViewModel::class.java)
-
         adapter = MainAdapter()
         adapter.notifyDataSetChanged()
-
-        rv_search.setHasFixedSize(true)
-        rv_search.layoutManager = LinearLayoutManager(this@MainActivity)
-        rv_search.adapter = adapter
-        viewModel.getSearchUser().observe(this, {
-            if (it!=null){
-                adapter.setList(it)
-                progressbar(false)
-            }
-        })
-
         adapter.setSelectedUser(object : MainAdapter.OnItemClick{
             override fun onItemClicked(data: User) {
                 Intent(this@MainActivity, DetailActivity::class.java).also {
@@ -69,7 +58,26 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+        showRecyclerList()
+    }
 
+    private fun showRecyclerList() {
+        rv_search.setHasFixedSize(true)
+        rv_search.layoutManager = LinearLayoutManager(this@MainActivity)
+        rv_search.adapter = adapter
+        viewModel.getSearchUser().observe(this, {
+            if (it!=null){
+                adapter.setList(it)
+                progressbar(false)
+            }
+        })
+    }
+
+    private fun searchUser(){
+        val query = et_query.text.toString()
+        if (query.isEmpty()) return
+        progressbar(true)
+        viewModel.setSearchUser(query)
     }
 
     private fun progressbar(state: Boolean){
@@ -78,13 +86,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             progressBar.visibility = View.GONE
         }
-    }
-
-    private fun searchUser(){
-        val query = et_query.text.toString()
-        if (query.isEmpty()) return
-        progressbar(true)
-        viewModel.setSearchUser(query)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

@@ -40,6 +40,20 @@ class FollowingFragment : Fragment() {
         val args = arguments
         username = args?.getString(DetailActivity.EXTRA_USERNAME).toString()
 
+        adapter.setSelectedUser(object : MainAdapter.OnItemClick{
+            override fun onItemClicked(data: User) {
+                Intent(requireContext(), DetailActivity::class.java).also {
+                    it.putExtra(DetailActivity.EXTRA_ID, data.id)
+                    it.putExtra(DetailActivity.EXTRA_USERNAME, data.login)
+                    it.putExtra(DetailActivity.EXTRA_AVATAR_URL, data.avatar_url)
+                    startActivity(it)
+                }
+            }
+        })
+        showRecyclerList()
+    }
+
+    private fun showRecyclerList() {
         rv_follow.setHasFixedSize(true)
         rv_follow.layoutManager = LinearLayoutManager(activity)
         rv_follow.adapter = adapter
@@ -51,21 +65,6 @@ class FollowingFragment : Fragment() {
                 progressbar(false)
             }
         })
-
-        adapter.setSelectedUser(object : MainAdapter.OnItemClick{
-            override fun onItemClicked(data: User) {
-                Intent(requireContext(), DetailActivity::class.java).also {
-                    it.putExtra(DetailActivity.EXTRA_ID, data.id)
-                    it.putExtra(DetailActivity.EXTRA_USERNAME, data.login)
-                    it.putExtra(DetailActivity.EXTRA_AVATAR_URL, data.avatar_url)
-                    startActivity(it)
-                }
-            }
-        })
-
-
-
-
     }
 
     private fun progressbar(state: Boolean){
