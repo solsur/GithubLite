@@ -14,6 +14,7 @@ class FollowersViewModel : ViewModel() {
 
     val listFollowers = MutableLiveData<ArrayList<User>>()
 
+    fun getFollowers(): LiveData<ArrayList<User>> = listFollowers
     fun setFollowers(username: String){
         RetrofitClient.instanceAPI
             .getFollowersUser(username)
@@ -27,13 +28,6 @@ class FollowersViewModel : ViewModel() {
                 override fun onFailure(call: Call<ArrayList<User>>, t: Throwable) {
                     Log.d("onFailure: ", t.message.toString())
                 }
-
             })
-
     }
-
-    fun getFollowers(): LiveData<ArrayList<User>> {
-        return  listFollowers
-    }
-
 }

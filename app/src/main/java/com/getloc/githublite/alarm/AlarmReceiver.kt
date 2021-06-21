@@ -22,10 +22,10 @@ class AlarmReceiver : BroadcastReceiver() {
     }
 
     private fun showAlarmNotification(context: Context){
-        val intent = context?.packageManager.getLaunchIntentForPackage("com.getloc.githublite")
+        val intent = context.packageManager.getLaunchIntentForPackage("com.getloc.githublite")
         val pendingIntent = PendingIntent.getActivity(context, 0 , intent, 0)
 
-        val notificationManager = context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentIntent(pendingIntent)

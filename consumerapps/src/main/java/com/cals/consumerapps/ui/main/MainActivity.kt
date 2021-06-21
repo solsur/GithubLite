@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         rv_main.layoutManager = LinearLayoutManager(this@MainActivity)
         rv_main.adapter = adapter
         viewModel.setUser(this)
-        viewModel.getUser()?.observe(this, {
+        viewModel.getUser().observe(this, {
             if (it!=null){
                 adapter.setList(it)
             }

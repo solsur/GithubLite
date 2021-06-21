@@ -9,14 +9,15 @@ import com.getloc.githublite.data.local.room.GithubDao
 import com.getloc.githublite.data.local.room.GithubDatabase
 import kotlinx.coroutines.InternalCoroutinesApi
 
+
 @InternalCoroutinesApi
 class UserContentProvider : ContentProvider() {
 
     private lateinit var githubDao: GithubDao
 
     override fun onCreate(): Boolean {
-        githubDao = context?.let { ctx->
-            GithubDatabase.getInstance(ctx)?.githubDao()
+        githubDao = context?.let {
+            GithubDatabase.getInstance(it)?.githubDao()
         }!!
         return false
     }

@@ -14,6 +14,7 @@ class FollowingViewModel : ViewModel() {
 
     val listFollowing = MutableLiveData<ArrayList<User>>()
 
+    fun getFollowing(): LiveData<ArrayList<User>> = listFollowing
     fun setFollowing(username: String){
         RetrofitClient.instanceAPI
             .getFollowingUser(username)
@@ -27,13 +28,6 @@ class FollowingViewModel : ViewModel() {
                 override fun onFailure(call: Call<ArrayList<User>>, t: Throwable) {
                     Log.d("onFailure: ", t.message.toString())
                 }
-
             })
-
     }
-
-    fun getFollowing(): LiveData<ArrayList<User>> {
-        return  listFollowing
-    }
-
 }
