@@ -2,6 +2,7 @@ package com.getloc.githublite.ui.detail
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -11,6 +12,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.getloc.githublite.R
 import com.getloc.githublite.ui.detail.tab.SectionsPagerAdapter
 import kotlinx.android.synthetic.main.activity_detail.*
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 
 @InternalCoroutinesApi
@@ -30,22 +32,25 @@ class DetailActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(DetailViewModel::class.java)
         viewModel.setUserDetail(username.toString())
         viewModel.getUserDetail().observe(this, {
-            Glide.with(this@DetailActivity)
-                .load(it.avatar_url)
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .transform(RoundedCorners(20))
-                .apply(
-                    RequestOptions.placeholderOf(R.drawable.ic_loader)
-                        .error(R.drawable.ic_error)
-                )
-                .centerCrop()
-                .into(iv_profile)
+            if (it != null){
+                Glide.with(this@DetailActivity)
+                        .load(it.avatar_url)
+                        .transition(DrawableTransitionOptions.withCrossFade())
+                        .transform(RoundedCorners(20))
+                        .apply(
+                                RequestOptions.placeholderOf(R.drawable.ic_loader)
+                                        .error(R.drawable.ic_error)
+                        )
+                        .centerCrop()
+                        .into(iv_profile)
 
-            tv_name.text = it.name
-            tv_username.text = it.login
-            tv_followers.text  = it.followers.toString()+" Followers"
-            tv_following.text  = it.following.toString()+" Following"
-            tv_location.text = it.location
+                tv_name.text = it.name
+                tv_username.text = it.login
+                tv_followers.text  = it.followers.toString()+" Followers"
+                tv_following.text  = it.following.toString()+" Following"
+                tv_location.text = it.location
+                progressbar(false)
+            }
         })
 
         val bundle = Bundle()
@@ -81,6 +86,14 @@ class DetailActivity : AppCompatActivity() {
             toggleFavorite.isChecked = addFav
         }
 
+    }
+
+    private fun progressbar(state: Boolean){
+        if (state){
+            progress_bar.visibility = View.VISIBLE
+        } else {
+            progress_bar.visibility = View.GONE
+        }
     }
 
     companion object {
